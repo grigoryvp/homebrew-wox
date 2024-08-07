@@ -17,11 +17,11 @@ jobs:
           echo "Latest version: $LATEST_RELEASE_VERSION"
 
           LATEST_AMD64_FILENAME=$(curl --silent "https://api.github.com/repos/wox-launcher/wox/releases/latest" | grep 'mac-amd64' | sed -n 's/.*"name": "\(.*\)".*/\1/p')
-          LATEST_AMD64_SHA=$(curl -sL "https://github.com/localsend/wox-launcher/releases/download/v${LATEST_RELEASE}/${LATEST_AMD64_FILENAME}" | sha256sum | cut -f 1 -d " ")
+          LATEST_AMD64_SHA=$(curl -sL "https://github.com/wox-launcher/wox/releases/download/v${LATEST_RELEASE}/${LATEST_AMD64_FILENAME}" | sha256sum | cut -f 1 -d " ")
           echo "Latest amd64 SHA: $LATEST_AMD64_SHA"
           
           LATEST_ARM64_FILENAME=$(curl --silent "https://api.github.com/repos/wox-launcher/wox/releases/latest" | grep 'mac-arm64' | sed -n 's/.*"name": "\(.*\)".*/\1/p')
-          LATEST_ARM64_SHA=$(curl -sL "https://github.com/localsend/wox-launcher/releases/download/v${LATEST_RELEASE}/${LATEST_ARM64_FILENAME}" | sha256sum | cut -f 1 -d " ")
+          LATEST_ARM64_SHA=$(curl -sL "https://github.com/wox-launcher/wox/releases/download/v${LATEST_RELEASE}/${LATEST_ARM64_FILENAME}" | sha256sum | cut -f 1 -d " ")
           echo "Latest arm64 SHA: $LATEST_ARM64_SHA"
           
           sed -i "s/version .*/version \"v${LATEST_RELEASE_VERSION}\"/" Casks/wox.rb
