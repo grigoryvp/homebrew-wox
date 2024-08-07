@@ -13,25 +13,27 @@ jobs:
 
       - name: Update cask
         run: |
+          LATEST_RELEASE_VERSION=$(curl --silent "https://api.github.com/repos/wox-launcher/wox/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
+          echo "Latest version: $LATEST_RELEASE_VERSION"
+
           LATEST_AMD64_FILENAME=$(curl --silent "https://api.github.com/repos/wox-launcher/wox/releases/latest" | grep 'mac-amd64' | sed -n 's/.*"name": "\(.*\)".*/\1/p')
-          LATEST_AMD64_RELEASE=$(curl --silent "https://api.github.com/repos/wox-launcher/wox/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
           LATEST_AMD64_SHA=$(curl -sL "https://github.com/localsend/wox-launcher/releases/download/v${LATEST_RELEASE}/${LATEST_AMD64_FILENAME}" | sha256sum | cut -f 1 -d " ")
-          echo "Latest amd64 release: $LATEST_AMD64_RELEASE"
           echo "Latest amd64 SHA: $LATEST_AMD64_SHA"
           
-          LATEST_ARM64_FILENAME=$(curl --silent "https://api.github.com/repos/wox-launcher/wox/releases/latest" | grep 'mac-amd64' | sed -n 's/.*"name": "\(.*\)".*/\1/p')
-          LATEST_ARM64_RELEASE=$(curl --silent "https://api.github.com/repos/wox-launcher/wox/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
+          LATEST_ARM64_FILENAME=$(curl --silent "https://api.github.com/repos/wox-launcher/wox/releases/latest" | grep 'mac-arm64' | sed -n 's/.*"name": "\(.*\)".*/\1/p')
           LATEST_ARM64_SHA=$(curl -sL "https://github.com/localsend/wox-launcher/releases/download/v${LATEST_RELEASE}/${LATEST_ARM64_FILENAME}" | sha256sum | cut -f 1 -d " ")
-          echo "Latest arm64 release: $LATEST_ARM64_RELEASE"
           echo "Latest arm64 SHA: $LATEST_ARM64_SHA"
           
-          echo "LATEST_AMD64_RELEASE=$LATEST_AMD64_RELEASE" >> $GITHUB_ENV
+          sed -i "s/version .*/version \"v${LATEST_RELEASE_VERSION}\"/" Casks/wox.rb
+          sed -i "/on_arm do/,/end/ s/sha256 .*/sha256 \"${LATEST_ARM64_SHA}\"/" Casks/wox.rb
+          sed -i "/on_intel do/,/end/ s/sha256 .*/sha256 \"${LATEST_AMD64_SHA}\"/" Casks/wox.rb
 
+          echo "LATEST_RELEASE_VERSION=$LATEST_RELEASE_VERSION" >> $GITHUB_ENV
       - name: Commit and push changes
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          COMMIT_MSG="Update Wox cask to v${{ env.LATEST_AMD64_RELEASE }}"
+          COMMIT_MSG="Update Wox cask to v${{ env.LATEST_RELEASE_VERSION }}"
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add Casks/wox.rb
