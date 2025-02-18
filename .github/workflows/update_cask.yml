@@ -1,7 +1,9 @@
 name: Update Wox Cask
 
 on:
-  workflow_dispatch: # only dispatch manually
+  schedule:
+    - cron: '0 0 * * *' # run everyday
+  workflow_dispatch: # run manually
 
 jobs:
   update_cask:
