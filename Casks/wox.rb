@@ -4,12 +4,12 @@ cask "wox" do
     version "v2.0.0-nightly"
 
     on_arm do
-      sha256 "82cdeb34537755f80cb7e43cdb3dfa18d2a602ff6e75704d9f3c0358779e42de"
-      url "https://github.com/Wox-launcher/Wox/releases/download/v2.0.0-nightly/wox-mac-arm64-20250216-14e9fc.dmg"
+      sha256 "d83bd1db1baa7f61bac01432c5035c3854b70346bb77d1424c1fa7446d871e88"
+      url "https://github.com/Wox-launcher/Wox/releases/download/v2.0.0-nightly/wox-mac-arm64-20250220-2d5448.dmg"
     end
     on_intel do
-      sha256 "638fff7be78e9a6403494d848eefa69a1fd9868876edf5045a0e5298c1858bcb"
-      url "https://github.com/Wox-launcher/Wox/releases/download/v2.0.0-nightly/wox-mac-amd64-20250216-14e9fc.dmg"
+      sha256 "05e85765db31c8ab6946a7cbd6a4642e8235b2d7c1a09145faf5f9ab0348aa40"
+      url "https://github.com/Wox-launcher/Wox/releases/download/v2.0.0-nightly/wox-mac-amd64-20250220-2d5448.dmg"
     end
   
     name "Wox"
