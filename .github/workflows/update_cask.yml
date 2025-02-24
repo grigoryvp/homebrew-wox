@@ -37,9 +37,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          COMMIT_MSG="Update Wox cask to v${{ env.LATEST_RELEASE_VERSION }}"
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add Casks/wox.rb
-          git commit -m "$COMMIT_MSG"
-          git push
+          # Check if there are any changes
+          if [[ -n "$(git status --porcelain Casks/wox.rb)" ]]; then
+            COMMIT_MSG="Update Wox cask to v${{ env.LATEST_RELEASE_VERSION }}"
+            git config --local user.email "action@github.com"
+            git config --local user.name "GitHub Action"
+            git add Casks/wox.rb
+            git commit -m "$COMMIT_MSG"
+            git push
+            echo "Changes committed and pushed successfully"
+          else
+            echo "No changes detected in Casks/wox.rb, skipping commit"
+          fi
