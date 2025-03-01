@@ -29,8 +29,28 @@ jobs:
           sed -i "s/version .*/version \"v${LATEST_RELEASE_VERSION}\"/" Casks/wox.rb
           sed -i "/on_arm do/,/end/ s/sha256 .*/sha256 \"${LATEST_ARM64_SHA}\"/" Casks/wox.rb
           sed -i "/on_intel do/,/end/ s/sha256 .*/sha256 \"${LATEST_AMD64_SHA}\"/" Casks/wox.rb
-          sed -i "/on_arm do/,/end/ s|url .*|url \"https://github.com/Wox-launcher/Wox/releases/download/v${LATEST_RELEASE_VERSION}/${LATEST_ARM64_FILENAME}\"|" Casks/wox.rb
-          sed -i "/on_intel do/,/end/ s|url .*|url \"https://github.com/Wox-launcher/Wox/releases/download/v${LATEST_RELEASE_VERSION}/${LATEST_AMD64_FILENAME}\"|" Casks/wox.rb
+          sed -i "/on_arm do/,/end/ s|url .*|url \"https://github.com/Wox-launcher/Wox/releases/download/v${LATEST_RELEASE_VERSION}/${LATEST_ARM64_FILENAME}\",\\n      verified: \"github.com/Wox-launcher/Wox/\"|" Casks/wox.rb
+          sed -i "/on_intel do/,/end/ s|url .*|url \"https://github.com/Wox-launcher/Wox/releases/download/v${LATEST_RELEASE_VERSION}/${LATEST_AMD64_FILENAME}\",\\n      verified: \"github.com/Wox-launcher/Wox/\"|" Casks/wox.rb
+          
+          # Check if livecheck block exists, add if not
+          if ! grep -q "livecheck do" Casks/wox.rb; then
+            sed -i "/app \"Wox.app\"/i \\
+  livecheck do\\
+    url :url\\
+    strategy :github_latest\\
+  end\\
+" Casks/wox.rb
+          fi
+          
+          # Check if zap block exists, add if not
+          if ! grep -q "zap trash:" Casks/wox.rb; then
+            sed -i "/app \"Wox.app\"/a \\
+\\
+  zap trash: [\\
+    \"~/.wox\",\\
+  ]\\
+" Casks/wox.rb
+          fi
           
           echo "LATEST_RELEASE_VERSION=$LATEST_RELEASE_VERSION" >> $GITHUB_ENV
       - name: Commit and push changes
