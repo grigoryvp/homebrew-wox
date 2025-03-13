@@ -17,11 +17,13 @@ cask "wox" do
       verified: "github.com/Wox-launcher/Wox/"
       verified: "github.com/Wox-launcher/Wox/"
       verified: "github.com/Wox-launcher/Wox/"
+      verified: "github.com/Wox-launcher/Wox/"
           verified: "github.com/Wox-launcher/Wox/"
     end
     on_intel do
       sha256 "a3d0366396048d740fd0b66a76133cb76e261a4230bbb8fe88c4593c9cd4b172"
       url "https://github.com/Wox-launcher/Wox/releases/download/v2.0.0-beta.1/wox-mac-amd64.dmg",
+      verified: "github.com/Wox-launcher/Wox/"
       verified: "github.com/Wox-launcher/Wox/"
       verified: "github.com/Wox-launcher/Wox/"
       verified: "github.com/Wox-launcher/Wox/"
