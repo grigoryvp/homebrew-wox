@@ -26,12 +26,19 @@ jobs:
           LATEST_ARM64_SHA=$(curl -sL "https://github.com/wox-launcher/wox/releases/download/v${LATEST_RELEASE_VERSION}/${LATEST_ARM64_FILENAME}" | sha256sum | cut -f 1 -d " ")
           echo "Latest arm64 SHA: $LATEST_ARM64_SHA"
           
+          # Update version
           sed -i "s/version .*/version \"v${LATEST_RELEASE_VERSION}\"/" Casks/wox.rb
+          
+          # Update ARM64 section
           sed -i "/on_arm do/,/end/ s/sha256 .*/sha256 \"${LATEST_ARM64_SHA}\"/" Casks/wox.rb
+          sed -i "/on_arm do/,/end/ s|url .*,|url \"https://github.com/Wox-launcher/Wox/releases/download/v${LATEST_RELEASE_VERSION}/${LATEST_ARM64_FILENAME}\",|" Casks/wox.rb
+          
+          # Update Intel section
           sed -i "/on_intel do/,/end/ s/sha256 .*/sha256 \"${LATEST_AMD64_SHA}\"/" Casks/wox.rb
-          sed -i "/on_arm do/,/end/ s|url .*|url \"https://github.com/Wox-launcher/Wox/releases/download/v${LATEST_RELEASE_VERSION}/${LATEST_ARM64_FILENAME}\",\\n      verified: \"github.com/Wox-launcher/Wox/\"|" Casks/wox.rb
-          sed -i "/on_intel do/,/end/ s|url .*|url \"https://github.com/Wox-launcher/Wox/releases/download/v${LATEST_RELEASE_VERSION}/${LATEST_AMD64_FILENAME}\",\\n      verified: \"github.com/Wox-launcher/Wox/\"|" Casks/wox.rb
+          sed -i "/on_intel do/,/end/ s|url .*,|url \"https://github.com/Wox-launcher/Wox/releases/download/v${LATEST_RELEASE_VERSION}/${LATEST_AMD64_FILENAME}\",|" Casks/wox.rb
+          
           echo "LATEST_RELEASE_VERSION=$LATEST_RELEASE_VERSION" >> $GITHUB_ENV
+          
       - name: Commit and push changes
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
